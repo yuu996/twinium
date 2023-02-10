@@ -30,7 +30,7 @@ def update_status(tweet_content):
 
 
 # Follow, search, and get users-----------------------------------------------------------------------------------------
-def get_followers(screen_name):
+def get_followers(screen_name): # cannot run
     """
     get_follower(screen_name | Str)
     """
