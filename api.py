@@ -21,7 +21,7 @@ def update_status(tweet_content):
     driver.find_element(by=By.CLASS_NAME, value="notranslate").send_keys(tweet_content)
     driver.find_element(by=By.XPATH, value="//div[@data-testid='tweetButton']").click()
 
-def get_followers(user_id):
+def get_followers(user_id):# うまくいかない
     """
     get_follower(ID | Str)
     """
