@@ -12,7 +12,9 @@ import time
 
 
 options = Options()
-options.add_argument(f"--user-data-dir=C:/Users/<username>/AppData/Local/Google/Chrome/User Data/profiledata")
+# options.add_argument(f"--user-data-dir=C:/Users/<username>/AppData/Local/Google/Chrome/User Data/profiledata")
+# options.add_argument(f"--profile-directory=Profile 2")
+options.add_argument(f"--user-data-dir=C:/Users/yuich/AppData/Local/Google/Chrome/User Data/profiledata")
 options.add_argument(f"--profile-directory=Profile 2")
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
@@ -55,9 +57,21 @@ def create_block(screen_name):
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
-    driver.find_element(By.CLASS_NAME,
-                        value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr").click()
+    driver.find_element(By.CLASS_NAME,value='css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr').click()
     driver.implicitly_wait(0.5)
-    driver.find_element(By.XPATH, value="//div[@data-testid='block']").click()
+    driver.find_element(By.XPATH, value='//div[@data-testid="block"]').click()
     driver.implicitly_wait(0.5)
     driver.find_element(By.XPATH, '//div[@data-testid="confirmationSheetConfirm"]').click()
+    time.sleep(10)
+
+def create_mute(screen_name):
+    """
+    create_mute(screen_name | Str)
+    """
+    driver.get(f"https://twitter.com/{screen_name}")
+    driver.implicitly_wait(1)
+    driver.find_element(By.CLASS_NAME,value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr").click()
+    driver.implicitly_wait(0.5)
+    driver.find_element(By.XPATH, value='//div[@data-testid="mute"]').click()
+
+create_mute("yuu_twcs")
