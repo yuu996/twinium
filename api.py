@@ -32,7 +32,7 @@ def update_status(tweet_content):
 # Follow, search, and get users-----------------------------------------------------------------------------------------
 def get_followers(screen_name):
     """
-    get_follower(ID | Str)
+    get_follower(screen_name | Str)
     """
     last_height = driver.execute_script("return document.body.scrollHeight")
     driver.get(f"https://twitter.com/{screen_name}/followers")
