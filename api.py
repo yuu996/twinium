@@ -6,8 +6,8 @@ from selenium.webdriver.chrome.options import Options
 import time
 
 options = Options()
-options.add_argument(f"--user-data-dir=C:/Users/<username>/AppData/Local/Google/Chrome/User Data/profiledata")# nは数字
-options.add_argument(f"--profile-directory=Profile 2")#アカウントごとにnが変わる
+options.add_argument(f"--user-data-dir=C:/Users/<username>/AppData/Local/Google/Chrome/User Data/profiledata")
+options.add_argument(f"--profile-directory=Profile 2")
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
 
