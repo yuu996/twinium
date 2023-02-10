@@ -60,7 +60,6 @@ def create_block(screen_name):
     driver.find_element(By.XPATH, value='//div[@data-testid="block"]').click()
     driver.implicitly_wait(0.5)
     driver.find_element(By.XPATH, '//div[@data-testid="confirmationSheetConfirm"]').click()
-    time.sleep(10)
 
 def create_mute(screen_name):
     """
