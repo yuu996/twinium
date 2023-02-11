@@ -60,7 +60,7 @@ def get_followers(driver, screen_name):  # cannot run
     return followers_list
 
 
-def is_follower(driver, screen_name):
+def is_follower(driver, screen_name): #canno run
     """
     is_follower(driver, screen_name | Str)
     mandatory -> driver
@@ -150,3 +150,7 @@ def destroy_mute(driver, screen_name):
         print("このユーザーをミュートしていませんでした")
         return False
 # ----------------------------------------------------------------------------------------------------------------------
+
+cre = driver(user_data_dir_path="C:/Users/yuich/AppData/Local/Google/Chrome/User Data/profiledata",profile_directory="Profile 2")
+result = destroy_block(cre,"yuu_twcs")
+print(result)
