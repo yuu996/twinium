@@ -6,15 +6,14 @@ from selenium.webdriver.chrome.options import Options
 import time
 
 #-----------------------------------------------------------------------------------------------------------------------
-# Latest change 2023/02/11
+# Latest Update 2023/02/11
 # Add create_block,get_followers,create_mute
 
-# Latest change 2023/02/11 13:04
+# Latest Update 2023/02/11 13:04
 # Add destroy_block,destroy_mute,is_follower
 
-# Latest change 2023/02/11 14:25
+# Latest Update 2023/02/11 14:25
 # Add destroy_status
-
 
 #-----------------------------------------------------------------------------------------------------------------------
 
