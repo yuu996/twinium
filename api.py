@@ -6,15 +6,10 @@ from selenium.webdriver.chrome.options import Options
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Latest Update 2023/02/11
-# Add create_block,get_followers,create_mute
-
-# Latest Update 2023/02/11 13:04
-# Add destroy_block,destroy_mute,is_follower
-
-# Latest Update 2023/02/11 14:25
-# Add destroy_status
+# Add create_block,get_followers,create_mute,destroy_block,destroy_mute,is_follower,destroy_status
 
 #-----------------------------------------------------------------------------------------------------------------------
+
 def driver(user_data_dir_path, profile_directory):
     """
     driver(user_data_dir_path | Str, profile_directory | Str)
@@ -51,7 +46,7 @@ def destroy_status(driver, tweet_url):
 
 
 # Follow, search, and get users-----------------------------------------------------------------------------------------
-def get_followers(driver, screen_name):# cannot run
+def get_followers(driver, screen_name):  # cannot run
     """
     get_follower(driver, screen_name | Str)
     mandatory -> driver
@@ -89,33 +84,40 @@ def create_block(driver, screen_name):
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
-    driver.find_element(By.CLASS_NAME,
-                        value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr").click()
-    driver.implicitly_wait(0.5)
-    driver.find_element(By.XPATH, value="//div[@data-testid='block']").click()
-    driver.implicitly_wait(0.5)
-    driver.find_element(By.XPATH, '//div[@data-testid="confirmationSheetConfirm"]').click()
+    now_status = driver.find_element(By.CLASS_NAME,
+                                     value='css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr')
+    if now_status.text == "ブロック中":
+        return False
+    else:
+        driver.find_element(By.CLASS_NAME,  # view menu
+                            value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr").click()
+        driver.implicitly_wait(0.5)
+        driver.find_element(By.XPATH, value="//div[@data-testid='block']").click()
+        driver.implicitly_wait(0.5)
+        driver.find_element(By.XPATH, '//div[@data-testid="confirmationSheetConfirm"]').click()
+        return True
 
 
 def destroy_block(driver, screen_name):
     """
     destroy_block(driver, screen_name | Str)
     mandatory -> driver
+    return | True or False
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
-    try:
-        is_blocknow = driver.find_element(By.XPATH, value='//div[@data-testid="empty_state_body_text"]')
-        if is_blocknow:
-            driver.implicitly_wait(0.5)
-            driver.find_element(By.CLASS_NAME,
-                                value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr").click()
-            driver.implicitly_wait(0.5)
-            driver.find_element(By.CLASS_NAME,
-                                value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-16y2uox.r-6gpygo.r-peo1c.r-1ps3wis.r-1ny4l3l.r-1udh08x.r-1guathk.r-1udbk01.r-o7ynqc.r-6416eg.r-lrvibr.r-3s2u2q").click()
-    except selenium.common.exceptions.NoSuchElementException:
-        print("このユーザーをブロックしていませんでした")
-        return "ブロックしていませんでした"
+    now_status = driver.find_element(By.CLASS_NAME,
+                                     value='css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr')
+    if now_status.text == "ブロック中":
+        driver.implicitly_wait(0.5)
+        driver.find_element(By.CLASS_NAME,
+                            value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr").click()
+        driver.implicitly_wait(0.5)
+        driver.find_element(By.CLASS_NAME,
+                            value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-16y2uox.r-6gpygo.r-peo1c.r-1ps3wis.r-1ny4l3l.r-1udh08x.r-1guathk.r-1udbk01.r-o7ynqc.r-6416eg.r-lrvibr.r-3s2u2q").click()
+        return True
+    else:
+        return False
 
 
 def create_mute(driver, screen_name):
@@ -134,15 +136,17 @@ def destroy_mute(driver, screen_name):
     """
     destroy_mute(driver, screen_name | Str)
     mandatory -> driver
+    return | True or False
     """
+    muted = bool
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
     try:
         driver.find_element(By.XPATH, value='//span[@data-testid="unmuteLink"]')
         driver.find_element(By.XPATH, value='//div[@data-testid="userActions"]').click()
         driver.find_element(By.XPATH, value='//div[@data-testid="mute"]').click()
+        return True
     except selenium.common.exceptions.NoSuchElementException:
         print("このユーザーをミュートしていませんでした")
-        return "ブロックしていませんでした"
-
+        return False
 # ----------------------------------------------------------------------------------------------------------------------
