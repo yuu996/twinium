@@ -15,26 +15,32 @@ from selenium.webdriver.chrome.options import Options
 # Add destroy_status
 
 #-----------------------------------------------------------------------------------------------------------------------
-
-
-options = Options()
-options.add_argument("--user-data-dir=C:/Users/<username>/AppData/Local/Google/Chrome/User Data/profiledata")
-options.add_argument("--profile-directory=Profile 2")
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=options)
+def driver(user_data_dir_path, profile_directory):
+    """
+    driver(user_data_dir_path | Str, profile_directory | Str)
+    """
+    options = Options()
+    options.add_argument(
+        f"--user-data-dir={user_data_dir_path}")
+    options.add_argument(f"--profile-directory={profile_directory}")
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
+    return driver
 
 
 # Post, retrieve, and engage with Tweets--------------------------------------------------------------------------------
-def update_status(tweet_content):
+def update_status(driver, tweet_content):
     """
-    update_status(tweet_content | Str)
+    update_status(driver, tweet_content | Str)
+    mandatory -> driver
     """
     driver.get("https://twitter.com/compose/tweet")
     driver.implicitly_wait(1)
-    driver.find_element(by=By.CLASS_NAME, value="notranslate").send_keys(tweet_content)
-    driver.find_element(by=By.XPATH, value="//div[@data-testid='tweetButton']").click()
+    driver.find_element(By.CLASS_NAME, value="notranslate").send_keys(tweet_content)
+    driver.find_element(By.XPATH, value="//div[@data-testid='tweetButton']").click()
 
-def destroy_status(tweet_url):
+
+def destroy_status(driver, tweet_url):
     driver.get(tweet_url)
     driver.implicitly_wait(1)
     driver.find_element(By.XPATH, value='//div[@data-testid="caret"]').click()
@@ -45,40 +51,56 @@ def destroy_status(tweet_url):
 
 
 # Follow, search, and get users-----------------------------------------------------------------------------------------
-def get_followers(screen_name): # cannot run
+def get_followers(driver, screen_name):
     """
-    get_follower(screen_name | Str)
+    get_follower(driver, screen_name | Str)
+    mandatory -> driver
     """
-    last_height = driver.execute_script("return document.body.scrollHeight")
+    followers_list = []
     driver.get(f"https://twitter.com/{screen_name}/followers")
-    while True:
-        driver.execute_script("window.scrollTo(0,document.body.scrollHeight);")
-        driver.implicitly_wait(1)
-        new_height = driver.execute_script("return document.body.scrollHeight")
-        if new_height == last_height:
-            break
-        last_height = new_height
-        usernames = driver.find_elements(By.CLASS_NAME,
-                                         value="css-18t94o4.css-1dbjc4n.r-1ny4l3l.r-1j3t67a.r-1w50u8q.r-o7ynqc.r-6416eg")
-        print(usernames)
+    driver.implicitly_wait(1)
+    follower = driver.find_elements(By.XPATH, value='//div[@dir="ltr"]')
+    for list in follower:
+        followers_list.append(list.text)
+    return followers_list
 
 
-# Mute, block, and report users-----------------------------------------------------------------------------------------
-def create_block(screen_name):
+def is_follower(driver, screen_name):
     """
-    create_block(screen_name | Str)
+    is_follower(driver, screen_name | Str)
+    mandatory -> driver
+    return | True or False
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
-    driver.find_element(By.CLASS_NAME,value='css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr').click()
+    try:
+        is_follower = driver.find_element(By.XPATH, value='//div[@data-testid="userFollowIndicator"]')
+        if is_follower:
+            return True
+    except selenium.common.exceptions.NoSuchElementException:
+        return False
+
+
+# Mute, block, and report users-----------------------------------------------------------------------------------------
+def create_block(driver, screen_name):
+    """
+    create_block(driver, screen_name | Str)
+    mandatory -> driver
+    """
+    driver.get(f"https://twitter.com/{screen_name}")
+    driver.implicitly_wait(1)
+    driver.find_element(By.CLASS_NAME,
+                        value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr").click()
     driver.implicitly_wait(0.5)
-    driver.find_element(By.XPATH, value='//div[@data-testid="block"]').click()
+    driver.find_element(By.XPATH, value="//div[@data-testid='block']").click()
     driver.implicitly_wait(0.5)
     driver.find_element(By.XPATH, '//div[@data-testid="confirmationSheetConfirm"]').click()
 
-def destroy_block(screen_name):
+
+def destroy_block(driver, screen_name):
     """
-    destroy_block(screen_name | Str)
+    destroy_block(driver, screen_name | Str)
+    mandatory -> driver
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
@@ -93,21 +115,25 @@ def destroy_block(screen_name):
                                 value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-16y2uox.r-6gpygo.r-peo1c.r-1ps3wis.r-1ny4l3l.r-1udh08x.r-1guathk.r-1udbk01.r-o7ynqc.r-6416eg.r-lrvibr.r-3s2u2q").click()
     except selenium.common.exceptions.NoSuchElementException:
         print("このユーザーをブロックしていませんでした")
+        return "ブロックしていませんでした"
 
 
-def create_mute(screen_name):
+def create_mute(driver, screen_name):
     """
-    create_mute(screen_name | Str)
+    create_mute(driver, screen_name | Str)
+    mandatory -> driver
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
-    driver.find_element(By.CLASS_NAME,value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr").click()
+    driver.find_element(By.XPATH, value='//div[@data-testid="userActions"]').click()
     driver.implicitly_wait(0.5)
     driver.find_element(By.XPATH, value='//div[@data-testid="mute"]').click()
 
-def destroy_mute(screen_name):
+
+def destroy_mute(driver, screen_name):
     """
-    destroy_mute(screen_name | Str)
+    destroy_mute(driver, screen_name | Str)
+    mandatory -> driver
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
@@ -116,14 +142,7 @@ def destroy_mute(screen_name):
         driver.find_element(By.XPATH, value='//div[@data-testid="userActions"]').click()
         driver.find_element(By.XPATH, value='//div[@data-testid="mute"]').click()
     except selenium.common.exceptions.NoSuchElementException:
-        print("ミュートしていませんでした")
+        print("このユーザーをミュートしていませんでした")
+        return "ブロックしていませんでした"
 
-def is_follower(screen_name):
-    driver.get(f"https://twitter.com/{screen_name}")
-    driver.implicitly_wait(1)
-    try:
-        is_follower = driver.find_element(By.XPATH, value='//div[@data-testid="userFollowIndicator"]')
-        if is_follower:
-            return True
-    except selenium.common.exceptions.NoSuchElementException:
-        return False
+# ----------------------------------------------------------------------------------------------------------------------
