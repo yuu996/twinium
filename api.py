@@ -60,7 +60,7 @@ def get_followers(driver, screen_name):  # cannot run
     return followers_list
 
 
-def is_follower(driver, screen_name): #canno run
+def is_follower(driver, screen_name): #cannot run
     """
     is_follower(driver, screen_name | Str)
     mandatory -> driver
@@ -84,11 +84,8 @@ def create_block(driver, screen_name):
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
-    now_status = driver.find_element(By.CLASS_NAME,
-                                     value='css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr')
-    if now_status.text == "ブロック中":
-        return False
-    else:
+    is_blocked = driver.find_element(By.CLASS_NAME,value='css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr')
+    if not is_blocked.get_attribute("data-testid").endswith("unblock"):
         driver.find_element(By.CLASS_NAME,  # view menu
                             value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr").click()
         driver.implicitly_wait(0.5)
@@ -96,6 +93,8 @@ def create_block(driver, screen_name):
         driver.implicitly_wait(0.5)
         driver.find_element(By.XPATH, '//div[@data-testid="confirmationSheetConfirm"]').click()
         return True
+    else:
+        return False
 
 
 def destroy_block(driver, screen_name):
@@ -106,9 +105,10 @@ def destroy_block(driver, screen_name):
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
-    now_status = driver.find_element(By.CLASS_NAME,
+    is_blocked = driver.find_element(By.CLASS_NAME,
                                      value='css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr')
-    if now_status.text == "ブロック中":
+
+    if is_blocked.get_attribute("data-testid").endswith("unblock"):
         driver.implicitly_wait(0.5)
         driver.find_element(By.CLASS_NAME,
                             value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr").click()
@@ -118,7 +118,6 @@ def destroy_block(driver, screen_name):
         return True
     else:
         return False
-
 
 def create_mute(driver, screen_name):
     """
@@ -149,4 +148,6 @@ def destroy_mute(driver, screen_name):
     except selenium.common.exceptions.NoSuchElementException:
         print("このユーザーをミュートしていませんでした")
         return False
+
+
 # ----------------------------------------------------------------------------------------------------------------------
