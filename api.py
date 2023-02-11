@@ -3,7 +3,6 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
-import time
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Latest Update 2023/02/11
@@ -19,8 +18,8 @@ import time
 
 
 options = Options()
-options.add_argument(f"--user-data-dir=C:/Users/<username>/AppData/Local/Google/Chrome/User Data/profiledata")
-options.add_argument(f"--profile-directory=Profile 2")
+options.add_argument("--user-data-dir=C:/Users/<username>/AppData/Local/Google/Chrome/User Data/profiledata")
+options.add_argument("--profile-directory=Profile 2")
 service = Service(ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
 
