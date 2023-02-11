@@ -12,6 +12,10 @@ import time
 # Latest change 2023/02/11 13:04
 # Add destroy_block,destroy_mute,is_follower
 
+# Latest change 2023/02/11 14:25
+# Add destroy_status
+
+
 #-----------------------------------------------------------------------------------------------------------------------
 
 
@@ -31,6 +35,15 @@ def update_status(tweet_content):
     driver.implicitly_wait(1)
     driver.find_element(by=By.CLASS_NAME, value="notranslate").send_keys(tweet_content)
     driver.find_element(by=By.XPATH, value="//div[@data-testid='tweetButton']").click()
+
+def destroy_status(tweet_url):
+    driver.get(tweet_url)
+    driver.implicitly_wait(1)
+    driver.find_element(By.XPATH, value='//div[@data-testid="caret"]').click()
+    driver.implicitly_wait(0.5)
+    driver.find_element(By.CLASS_NAME,
+                        value='css-1dbjc4n.r-1loqt21.r-18u37iz.r-1ny4l3l.r-ymttw5.r-1f1sjgu.r-o7ynqc.r-6416eg.r-13qz1uu').click()
+    driver.find_element(By.XPATH, value='//div[@data-testid="confirmationSheetConfirm"]').click()
 
 
 # Follow, search, and get users-----------------------------------------------------------------------------------------
