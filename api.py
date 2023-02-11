@@ -51,7 +51,7 @@ def destroy_status(driver, tweet_url):
 
 
 # Follow, search, and get users-----------------------------------------------------------------------------------------
-def get_followers(driver, screen_name):
+def get_followers(driver, screen_name):# cannot run
     """
     get_follower(driver, screen_name | Str)
     mandatory -> driver
