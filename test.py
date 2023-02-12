@@ -28,7 +28,6 @@ def get_followers(screen_name):
         last_height = driver.execute_script("return document.body.scrollHeight")
         while True:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            # Wait to load page
             time.sleep(1)
             new_height = driver.execute_script("return document.body.scrollHeight")
             if new_height == last_height:
@@ -41,3 +40,5 @@ def get_followers(screen_name):
         return follower_list
     except Exception:
         return False
+
+get_followers("yuu_love56n")
