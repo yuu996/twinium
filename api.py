@@ -148,6 +148,4 @@ def destroy_mute(driver, screen_name):
     except selenium.common.exceptions.NoSuchElementException:
         print("このユーザーをミュートしていませんでした")
         return False
-
-
 # ----------------------------------------------------------------------------------------------------------------------
