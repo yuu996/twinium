@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
+import selenium
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Update 2023/02/11
