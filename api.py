@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import SessionNotCreatedException
 import selenium
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -79,7 +80,7 @@ def is_follower(driver, screen_name): #cannot run
     try:
         is_follower = driver.find_element(By.XPATH, value='//div[@data-testid="userFollowIndicator"]')
         return True
-    except selenium.common.exceptions.NoSuchElementException:
+    except Exception:
         return False
 
 def is_Private(driver,screen_name):
@@ -95,7 +96,7 @@ def is_Private(driver,screen_name):
     try:
         is_private = driver.find_element(By.XPATH,value='//*[@data-testid="icon-lock"]')
         return True
-    except selenium.common.exceptions.NoSuchElementException:
+    except Exception:
         return False
 
 def create_follow(driver, screen_name):
@@ -112,7 +113,7 @@ def create_follow(driver, screen_name):
         is_unfollow = driver.find_element(By.CLASS_NAME,value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr")
         if is_follow.get_attribute("data-testid").endswith("unfollow"):
             return False
-    except selenium.common.exceptions.NoSuchElementException:
+    except Exception:
         driver.find_element(By.CLASS_NAME,value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr").click()
         return True
 
@@ -132,7 +133,7 @@ def destroy_follow(driver, screen_name):
             driver.find_element(By.CLASS_NAME,
                                 value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr").click()
             return True
-    except selenium.common.exceptions.NoSuchElementException:
+    except Exception:
         return False
 
 
@@ -146,16 +147,17 @@ def create_block(driver, screen_name):
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
-    is_blocked = driver.find_element(By.CLASS_NAME,value='css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr')
-    if not is_blocked.get_attribute("data-testid").endswith("unblock"):
-        driver.find_element(By.CLASS_NAME,  # view menu
-                            value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr").click()
-        driver.implicitly_wait(0.5)
-        driver.find_element(By.XPATH, value="//div[@data-testid='block']").click()
-        driver.implicitly_wait(0.5)
-        driver.find_element(By.XPATH, '//div[@data-testid="confirmationSheetConfirm"]').click()
-        return True
-    else:
+    try:
+        is_blocked = driver.find_element(By.CLASS_NAME,value='css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr')
+        if not is_blocked.get_attribute("data-testid").endswith("unblock"):
+            driver.find_element(By.CLASS_NAME,  # view menu
+                                value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-6gpygo.r-1kb76zh.r-2yi16.r-1qi8awa.r-1ny4l3l.r-o7ynqc.r-6416eg.r-lrvibr").click()
+            driver.implicitly_wait(0.5)
+            driver.find_element(By.XPATH, value="//div[@data-testid='block']").click()
+            driver.implicitly_wait(0.5)
+            driver.find_element(By.XPATH, '//div[@data-testid="confirmationSheetConfirm"]').click()
+            return True
+    except Exception:
         return False
 
 def destroy_block(driver, screen_name):
@@ -167,18 +169,19 @@ def destroy_block(driver, screen_name):
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
-    is_blocked = driver.find_element(By.CLASS_NAME,
-                                     value='css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr')
+    try:
+        is_blocked = driver.find_element(By.CLASS_NAME,
+                                         value='css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr')
 
-    if is_blocked.get_attribute("data-testid").endswith("unblock"):
-        driver.implicitly_wait(0.5)
-        driver.find_element(By.CLASS_NAME,
-                            value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr").click()
-        driver.implicitly_wait(0.5)
-        driver.find_element(By.CLASS_NAME,
-                            value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-16y2uox.r-6gpygo.r-peo1c.r-1ps3wis.r-1ny4l3l.r-1udh08x.r-1guathk.r-1udbk01.r-o7ynqc.r-6416eg.r-lrvibr.r-3s2u2q").click()
-        return True
-    else:
+        if is_blocked.get_attribute("data-testid").endswith("unblock"):
+            driver.implicitly_wait(0.5)
+            driver.find_element(By.CLASS_NAME,
+                                value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr").click()
+            driver.implicitly_wait(0.5)
+            driver.find_element(By.CLASS_NAME,
+                                value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-16y2uox.r-6gpygo.r-peo1c.r-1ps3wis.r-1ny4l3l.r-1udh08x.r-1guathk.r-1udbk01.r-o7ynqc.r-6416eg.r-lrvibr.r-3s2u2q").click()
+            return True
+    except Exception:
         return False
 
 def create_mute(driver, screen_name):
@@ -193,7 +196,7 @@ def create_mute(driver, screen_name):
     try:
         driver.find_element(By.XPATH,value='//span[@data-testid="unmuteLink"]')
         return False
-    except selenium.common.exceptions.NoSuchElementException:
+    except Exception:
         driver.find_element(By.XPATH, value='//div[@data-testid="userActions"]').click()
         driver.implicitly_wait(0.5)
         driver.find_element(By.XPATH, value='//div[@data-testid="mute"]').click()
@@ -213,7 +216,7 @@ def destroy_mute(driver, screen_name):
         driver.find_element(By.XPATH, value='//div[@data-testid="userActions"]').click()
         driver.find_element(By.XPATH, value='//div[@data-testid="mute"]').click()
         return True
-    except selenium.common.exceptions.NoSuchElementException:
+    except Exception:
         return False
 
 
