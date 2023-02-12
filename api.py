@@ -92,12 +92,6 @@ def is_Private(driver,screen_name):
     except selenium.common.exceptions.NoSuchElementException:
         return False
 
-options = Options()
-options.add_argument(f"--user-data-dir=C:/Users/yuich/AppData/Local/Google/Chrome/User Data/profiledata")
-options.add_argument(f"--profile-directory=Profile 2")
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=options)
-
 def create_follow(driver, screen_name):
     """
     create_follow(driver, screen_name)
