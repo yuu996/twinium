@@ -14,6 +14,7 @@ import selenium
 
 #-----------------------------------------------------------------------------------------------------------------------
 
+
 def driver(user_data_dir_path, profile_directory):
     """
     driver(user_data_dir_path | Str, profile_directory | Str)
@@ -92,12 +93,6 @@ def is_Private(driver,screen_name):
     except selenium.common.exceptions.NoSuchElementException:
         return False
 
-options = Options()
-options.add_argument(f"--user-data-dir=C:/Users/yuich/AppData/Local/Google/Chrome/User Data/profiledata")
-options.add_argument(f"--profile-directory=Profile 2")
-service = Service(ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=options)
-
 def create_follow(driver, screen_name):
     """
     create_follow(driver, screen_name)
@@ -134,6 +129,7 @@ def destroy_follow(driver, screen_name):
             return True
     except selenium.common.exceptions.NoSuchElementException:
         return False
+
 
 # Mute, block, and report users-----------------------------------------------------------------------------------------
 def create_block(driver, screen_name):
@@ -206,5 +202,4 @@ def destroy_mute(driver, screen_name):
     except selenium.common.exceptions.NoSuchElementException:
         print("このユーザーをミュートしていませんでした")
         return False
-
 # ----------------------------------------------------------------------------------------------------------------------
