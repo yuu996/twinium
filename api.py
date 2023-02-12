@@ -23,7 +23,6 @@ def driver(user_data_dir_path, profile_directory):
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 
-
 # Post, retrieve, and engage with Tweets--------------------------------------------------------------------------------
 def update_status(driver, tweet_content):
     """
@@ -75,6 +74,19 @@ def is_follower(driver, screen_name): #cannot run
             return True
     except selenium.common.exceptions.NoSuchElementException:
         return False
+
+def is_Private(driver,screen_name):
+    driver.get(f"https://twitter.com/{screen_name}")
+    driver.implicitly_wait(1)
+    try:
+        is_private = driver.find_element(By.XPATH,value='//*[@data-testid="icon-lock"]')
+        if is_private:
+            print("鍵アカウントです")
+            return True
+    except selenium.common.exceptions.NoSuchElementException:
+        print("公開アカウントです")
+        return False
+
 
 
 # Mute, block, and report users-----------------------------------------------------------------------------------------
@@ -148,4 +160,5 @@ def destroy_mute(driver, screen_name):
     except selenium.common.exceptions.NoSuchElementException:
         print("このユーザーをミュートしていませんでした")
         return False
+
 # ----------------------------------------------------------------------------------------------------------------------
