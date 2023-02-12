@@ -6,8 +6,11 @@ from selenium.webdriver.chrome.options import Options
 import selenium
 
 #-----------------------------------------------------------------------------------------------------------------------
-# Latest Update 2023/02/11
+# Update 2023/02/11
 # Add create_block,get_followers,create_mute,destroy_block,destroy_mute,is_follower,destroy_status
+
+# Update 2023/02/12
+# Add is_Private
 
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -76,6 +79,13 @@ def is_follower(driver, screen_name): #cannot run
         return False
 
 def is_Private(driver,screen_name):
+    """
+    is_Private(driver, screen_name | Str)
+    mandatory -> driver
+    return | True or False
+    Private account -> True
+    Public account -> False
+    """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
     try:
