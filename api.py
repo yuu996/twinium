@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 import selenium
+from selenium.common.exceptions import NoSuchElementException
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Update 2023/02/11
@@ -13,8 +14,6 @@ import selenium
 # Add is_Private,create_follow,destroy_follow
 
 #-----------------------------------------------------------------------------------------------------------------------
-
-
 def driver(user_data_dir_path, profile_directory):
     """
     driver(user_data_dir_path | Str, profile_directory | Str)
@@ -151,7 +150,6 @@ def create_block(driver, screen_name):
     else:
         return False
 
-
 def destroy_block(driver, screen_name):
     """
     destroy_block(driver, screen_name | Str)
@@ -181,10 +179,14 @@ def create_mute(driver, screen_name):
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
-    driver.find_element(By.XPATH, value='//div[@data-testid="userActions"]').click()
-    driver.implicitly_wait(0.5)
-    driver.find_element(By.XPATH, value='//div[@data-testid="mute"]').click()
-
+    try:
+        driver.find_element(By.XPATH,value='//span[@data-testid="unmuteLink"]')
+        return False
+    except selenium.common.exceptions.NoSuchElementException:
+        driver.find_element(By.XPATH, value='//div[@data-testid="userActions"]').click()
+        driver.implicitly_wait(0.5)
+        driver.find_element(By.XPATH, value='//div[@data-testid="mute"]').click()
+        return True
 
 def destroy_mute(driver, screen_name):
     """
@@ -200,6 +202,7 @@ def destroy_mute(driver, screen_name):
         driver.find_element(By.XPATH, value='//div[@data-testid="mute"]').click()
         return True
     except selenium.common.exceptions.NoSuchElementException:
-        print("このユーザーをミュートしていませんでした")
         return False
+
+
 # ----------------------------------------------------------------------------------------------------------------------
