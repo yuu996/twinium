@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
+import selenium
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Update 2023/02/11
@@ -38,6 +39,10 @@ def update_status(driver, tweet_content):
 
 
 def destroy_status(driver, tweet_url):
+    """
+    destroy_status(driver, tweet_url)
+    mandatory -> driver
+    """
     driver.get(tweet_url)
     driver.implicitly_wait(1)
     driver.find_element(By.XPATH, value='//div[@data-testid="caret"]').click()
@@ -65,7 +70,9 @@ def is_follower(driver, screen_name): #cannot run
     """
     is_follower(driver, screen_name | Str)
     mandatory -> driver
-    return | True or False
+    follower -> True
+    not follower -> False
+
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
@@ -134,6 +141,8 @@ def create_block(driver, screen_name):
     """
     create_block(driver, screen_name | Str)
     mandatory -> driver
+    Success -> True
+    Failed -> False
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
@@ -153,7 +162,8 @@ def destroy_block(driver, screen_name):
     """
     destroy_block(driver, screen_name | Str)
     mandatory -> driver
-    return | True or False
+    Success -> True
+    Failed -> False
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
@@ -175,6 +185,8 @@ def create_mute(driver, screen_name):
     """
     create_mute(driver, screen_name | Str)
     mandatory -> driver
+    Success -> True
+    Failed -> False
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
@@ -191,7 +203,8 @@ def destroy_mute(driver, screen_name):
     """
     destroy_mute(driver, screen_name | Str)
     mandatory -> driver
-    return | True or False
+    Success -> True
+    Failed -> False
     """
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
