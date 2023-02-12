@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+import selenium
 
 #-----------------------------------------------------------------------------------------------------------------------
 # Latest Update 2023/02/11
@@ -137,7 +138,6 @@ def destroy_mute(driver, screen_name):
     mandatory -> driver
     return | True or False
     """
-    muted = bool
     driver.get(f"https://twitter.com/{screen_name}")
     driver.implicitly_wait(1)
     try:
