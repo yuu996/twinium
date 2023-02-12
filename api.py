@@ -187,7 +187,6 @@ def destroy_block(driver, screen_name):
     try:
         is_blocked = driver.find_element(By.CLASS_NAME,
                                          value='css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr')
-
         if is_blocked.get_attribute("data-testid").endswith("unblock"):
             driver.implicitly_wait(0.5)
             driver.find_element(By.CLASS_NAME,
