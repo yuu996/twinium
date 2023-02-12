@@ -10,7 +10,7 @@ import selenium
 # Add create_block,get_followers,create_mute,destroy_block,destroy_mute,is_follower,destroy_status
 
 # Update 2023/02/12
-# Add is_Private
+# Add is_Private,create_follow,destroy_follow
 
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -47,7 +47,6 @@ def destroy_status(driver, tweet_url):
                         value='css-1dbjc4n.r-1loqt21.r-18u37iz.r-1ny4l3l.r-ymttw5.r-1f1sjgu.r-o7ynqc.r-6416eg.r-13qz1uu').click()
     driver.find_element(By.XPATH, value='//div[@data-testid="confirmationSheetConfirm"]').click()
 
-
 # Follow, search, and get users-----------------------------------------------------------------------------------------
 def get_followers(driver, screen_name):  # cannot run
     """
@@ -73,8 +72,7 @@ def is_follower(driver, screen_name): #cannot run
     driver.implicitly_wait(1)
     try:
         is_follower = driver.find_element(By.XPATH, value='//div[@data-testid="userFollowIndicator"]')
-        if is_follower:
-            return True
+        return True
     except selenium.common.exceptions.NoSuchElementException:
         return False
 
@@ -90,14 +88,52 @@ def is_Private(driver,screen_name):
     driver.implicitly_wait(1)
     try:
         is_private = driver.find_element(By.XPATH,value='//*[@data-testid="icon-lock"]')
-        if is_private:
-            print("鍵アカウントです")
-            return True
+        return True
     except selenium.common.exceptions.NoSuchElementException:
-        print("公開アカウントです")
         return False
 
+options = Options()
+options.add_argument(f"--user-data-dir=C:/Users/yuich/AppData/Local/Google/Chrome/User Data/profiledata")
+options.add_argument(f"--profile-directory=Profile 2")
+service = Service(ChromeDriverManager().install())
+driver = webdriver.Chrome(service=service, options=options)
 
+def create_follow(driver, screen_name):
+    """
+    create_follow(driver, screen_name)
+    mandatory -> driver
+    return | True or False
+    Follow now -> False
+    not Follow now -> True
+    """
+    driver.get(f"https://twitter.com/{screen_name}")
+    driver.implicitly_wait(1)
+    try:
+        is_unfollow = driver.find_element(By.CLASS_NAME,value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr")
+        if is_follow.get_attribute("data-testid").endswith("unfollow"):
+            return False
+    except selenium.common.exceptions.NoSuchElementException:
+        driver.find_element(By.CLASS_NAME,value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr").click()
+        return True
+
+def destroy_follow(driver, screen_name):
+    """
+    destroy_follow(driver, screen_name)
+    mandatory -> driver
+    return | True or False
+    Follow now -> True
+    not Follow now -> False
+    """
+    driver.get(f"https://twitter.com/{screen_name}")
+    driver.implicitly_wait(1)
+    try:
+        is_unfollow = driver.find_element(By.CLASS_NAME,value="css-18t94o4.css-1dbjc4n.r-1niwhzg.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr")
+        if is_follow.get_attribute("data-testid").endswith("unfollow"):
+            driver.find_element(By.CLASS_NAME,
+                                value="css-18t94o4.css-1dbjc4n.r-42olwf.r-sdzlij.r-1phboty.r-rs99b7.r-2yi16.r-1qi8awa.r-1ny4l3l.r-ymttw5.r-o7ynqc.r-6416eg.r-lrvibr").click()
+            return True
+    except selenium.common.exceptions.NoSuchElementException:
+        return False
 
 # Mute, block, and report users-----------------------------------------------------------------------------------------
 def create_block(driver, screen_name):
