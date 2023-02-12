@@ -40,5 +40,3 @@ def get_followers(screen_name):
         return follower_list
     except Exception:
         return False
-
-get_followers("yuu_love56n")
