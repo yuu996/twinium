@@ -13,8 +13,6 @@ import selenium
 # Add is_Private,create_follow,destroy_follow
 
 #-----------------------------------------------------------------------------------------------------------------------
-
-
 def driver(user_data_dir_path, profile_directory):
     """
     driver(user_data_dir_path | Str, profile_directory | Str)
