@@ -14,6 +14,7 @@ import selenium
 
 #-----------------------------------------------------------------------------------------------------------------------
 
+
 def driver(user_data_dir_path, profile_directory):
     """
     driver(user_data_dir_path | Str, profile_directory | Str)
@@ -129,6 +130,7 @@ def destroy_follow(driver, screen_name):
     except selenium.common.exceptions.NoSuchElementException:
         return False
 
+
 # Mute, block, and report users-----------------------------------------------------------------------------------------
 def create_block(driver, screen_name):
     """
@@ -200,5 +202,4 @@ def destroy_mute(driver, screen_name):
     except selenium.common.exceptions.NoSuchElementException:
         print("このユーザーをミュートしていませんでした")
         return False
-
 # ----------------------------------------------------------------------------------------------------------------------
