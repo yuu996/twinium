@@ -12,7 +12,7 @@ import selenium
 # Add create_block,get_followers,create_mute,destroy_block,destroy_mute,is_follower,destroy_status
 
 # Update 2023/02/12
-# Add is_Private,create_follow,destroy_follow
+# Add is_Private,create_follow,destroy_follow,is_verified_account
 
 #-----------------------------------------------------------------------------------------------------------------------
 def driver(user_data_dir_path, profile_directory):
@@ -95,6 +95,21 @@ def is_Private(driver,screen_name):
     driver.implicitly_wait(1)
     try:
         is_private = driver.find_element(By.XPATH,value='//*[@data-testid="icon-lock"]')
+        return True
+    except Exception:
+        return False
+
+def is_verified_account(driver,screen_name):
+    """
+    is_verified_account(driver, screen_name | Str)
+    mandatory -> driver
+    exists -> True
+    not exists -> False
+    """
+    try:
+        driver.get(f"https://twitter.com/{screen_name}")
+        driver.implicitly_wait(1)
+        driver.find_element(By.XPATH,value='//*[@data-testid="icon-verified"]')
         return True
     except Exception:
         return False
